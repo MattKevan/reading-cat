@@ -1,0 +1,37 @@
+---
+import { getSiteSettingsWithCacheHint, getEmDashCollection } from 'emdash';
+import { EmDashHead, EmDashBodyStart, EmDashBodyEnd } from 'emdash/ui';
+import { createPublicPageContext } from 'emdash/page';
+import { canContribute } from '../lib/contributor-access';
+import '../styles/theme.css';
+interface Props { title?: string; description?: string | null; image?: string | null; content?: { collection: string; id: string; slug?: string | null }; }
+const { title, description, image, content } = Astro.props;
+const showEditorLinks = canContribute(Astro.locals.user);
+if (Astro.locals.user) Astro.response.headers.set('Cache-Control', 'private, no-store');
+const { data: settings, cacheHint } = await getSiteSettingsWithCacheHint();
+const home = await getEmDashCollection('homepage', { limit: 1 });
+if(Astro.cache?.enabled){ Astro.cache.set(cacheHint); Astro.cache.set(home.cacheHint); }
+const siteTitle = settings.title || 'Reading Cat';
+const fullTitle = title ? `${title} · ${siteTitle}` : siteTitle;
+const pageCtx = createPublicPageContext({ Astro, kind: content ? 'content' : 'custom', pageType:'website', title:fullTitle, description, image, content });
+---
+<!doctype html>
+<html lang="en-GB">
+ <head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title><meta name="description" content={description || settings.tagline || 'Book reviews and drawings from a young reader.'} />
+  <link rel="icon" href="/images/reading-cat-logo.png" type="image/png" />
+  <EmDashHead page={pageCtx} />
+ </head>
+ <body>
+  <EmDashBodyStart page={pageCtx} />
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header"><nav class="nav wrap" aria-label="Main navigation">
+   <a href="/" class="brand"><img class="brand-icon" src="/images/reading-cat-logo.png" width="58" height="58" alt="" />{siteTitle}</a>
+   <div class="nav-links"><a href="/bookshelf">My bookshelf</a>{showEditorLinks && <><a href="/drafts">My drafts</a><a href="/write" class="button">Write a review</a></>}</div>
+  </nav></header>
+  <main id="main"><slot /></main>
+  <footer class="site-footer"><div class="footer-inner wrap"><p>{home.entries[0]?.data.footer || 'Made of books, big ideas, and a little cat hair.'}</p><a href="/_emdash/admin/">{Astro.locals.user ? 'Dashboard' : 'Log in'}</a></div></footer>
+  <EmDashBodyEnd page={pageCtx} />
+ </body>
+</html>

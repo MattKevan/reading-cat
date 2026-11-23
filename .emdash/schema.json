@@ -1,0 +1,242 @@
+{
+  "collections": [
+    {
+      "slug": "homepage",
+      "label": "Homepage words",
+      "labelSingular": "Homepage",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "heading",
+          "label": "Big heading",
+          "type": "string",
+          "required": true,
+          "unique": false
+        },
+        {
+          "slug": "shelf_intro",
+          "label": "Bookshelf introduction",
+          "type": "text",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "footer",
+          "label": "Footer words",
+          "type": "string",
+          "required": false,
+          "unique": false
+        }
+      ]
+    },
+    {
+      "slug": "reviews",
+      "label": "Book reviews",
+      "labelSingular": "Book review",
+      "icon": "book-open",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "seo"
+      ],
+      "hidden": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Book title",
+          "type": "string",
+          "required": true,
+          "unique": false,
+          "validation": {
+            "maxLength": 200
+          }
+        },
+        {
+          "slug": "author",
+          "label": "Who wrote it?",
+          "type": "string",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "maxLength": 200
+          }
+        },
+        {
+          "slug": "illustrator",
+          "label": "Who drew the pictures? (optional)",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "genre",
+          "label": "What kind of book is it?",
+          "type": "select",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "options": [
+              "Adventure",
+              "Fantasy",
+              "Funny",
+              "Mystery",
+              "Real life",
+              "Animals",
+              "Non-fiction",
+              "Poetry",
+              "Other"
+            ]
+          }
+        },
+        {
+          "slug": "age_range",
+          "label": "Who is this book for?",
+          "type": "string",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "read_on",
+          "label": "When did you finish it?",
+          "type": "datetime",
+          "required": false,
+          "unique": false
+        },
+        {
+          "slug": "cover",
+          "label": "Book cover — upload a photo or image",
+          "type": "image",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "allowedMimeTypes": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ]
+          }
+        },
+        {
+          "slug": "summary",
+          "label": "What is the story about? Keep the ending a secret!",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "maxLength": 2000
+          },
+          "options": {
+            "rows": 4
+          }
+        },
+        {
+          "slug": "favourite_character",
+          "label": "My favourite character is… because…",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "favourite_part",
+          "label": "My favourite part was… because…",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "feelings",
+          "label": "This book made me feel… because…",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "change",
+          "label": "One thing I would change… (optional)",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "recommendation",
+          "label": "I would recommend this to… because…",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "rating",
+          "label": "My rating (1 to 5 stars)",
+          "type": "integer",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "min": 1,
+            "max": 5
+          }
+        },
+        {
+          "slug": "drawing",
+          "label": "My drawing — upload a photo of your artwork",
+          "type": "image",
+          "required": false,
+          "unique": false,
+          "validation": {
+            "allowedMimeTypes": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ]
+          }
+        },
+        {
+          "slug": "drawing_caption",
+          "label": "Tell us about your drawing",
+          "type": "text",
+          "required": false,
+          "unique": false,
+          "options": {
+            "rows": 2
+          }
+        },
+        {
+          "slug": "contains_spoilers",
+          "label": "Does my review give away a surprise?",
+          "type": "boolean",
+          "required": false,
+          "unique": false,
+          "defaultValue": false
+        },
+        {
+          "slug": "is_sample",
+          "label": "This is an example review",
+          "type": "boolean",
+          "required": false,
+          "unique": false,
+          "defaultValue": false
+        }
+      ]
+    }
+  ],
+  "version": "128e7f30f96ebddf"
+}

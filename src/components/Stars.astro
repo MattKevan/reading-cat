@@ -1,0 +1,5 @@
+---
+const { rating } = Astro.props;
+const stars = Math.min(5, Math.max(0, Number(rating) || 0));
+---
+{stars > 0 && <div class="stars" role="img" aria-label={`${stars} out of 5 stars`}><span aria-hidden="true">{'★'.repeat(stars)}<span class="off">{'★'.repeat(5-stars)}</span></span></div>}

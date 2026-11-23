@@ -1,0 +1,18 @@
+---
+import { Image } from 'emdash/ui';
+import Stars from './Stars.astro';
+import type { Review } from '../../emdash-env';
+import type { ContentEntry } from 'emdash';
+interface Props { review: ContentEntry<Review>; }
+const { review } = Astro.props;
+const book = review.data;
+---
+<article class="book-card">
+ <a class="book-link" href={`/reviews/${review.id}`} aria-label={`Read the review of ${book.title}`}>
+  <div class="cover-stage">{book.cover ? <Image image={book.cover} /> : <div class="cover-placeholder">{book.title}</div>}</div>
+  <Stars rating={book.rating} /><h3 {...review.edit.title}>{book.title}</h3><p class="author" {...review.edit.author}>by {book.author || 'Author to add'}</p>
+ </a>
+ <p class="book-opinion">{book.feelings || book.summary || 'A new adventure on my bookshelf.'}</p>
+ <div class="card-foot"><a href={`/reviews/${review.id}`}>Read my review</a>{book.genre && <span>{book.genre}</span>}</div>
+ {book.is_sample && <p class="sample-label">Example review · ready to edit or replace</p>}
+</article>

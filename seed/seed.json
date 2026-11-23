@@ -1,0 +1,309 @@
+{
+  "$schema": "https://emdashcms.com/seed.schema.json",
+  "version": "1",
+  "meta": {
+    "name": "Reading Cat",
+    "description": "A little bookshelf of stories and drawings"
+  },
+  "settings": {
+    "title": "Reading Cat",
+    "tagline": "A little bookshelf of stories, favourite characters, and things I drew along the way.",
+    "timezone": "Europe/London"
+  },
+  "collections": [
+    {
+      "slug": "reviews",
+      "label": "Book reviews",
+      "labelSingular": "Book review",
+      "icon": "book-open",
+      "titleField": "title",
+      "urlPattern": "/reviews/{slug}",
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Book title",
+          "type": "string",
+          "required": true,
+          "searchable": true,
+          "validation": {
+            "maxLength": 200
+          }
+        },
+        {
+          "slug": "author",
+          "label": "Who wrote it?",
+          "type": "string",
+          "validation": {
+            "maxLength": 200
+          }
+        },
+        {
+          "slug": "illustrator",
+          "label": "Who drew the pictures? (optional)",
+          "type": "string"
+        },
+        {
+          "slug": "genre",
+          "label": "What kind of book is it?",
+          "type": "select",
+          "validation": {
+            "options": [
+              "Adventure",
+              "Fantasy",
+              "Funny",
+              "Mystery",
+              "Real life",
+              "Animals",
+              "Non-fiction",
+              "Poetry",
+              "Other"
+            ]
+          }
+        },
+        {
+          "slug": "age_range",
+          "label": "Who is this book for?",
+          "type": "string"
+        },
+        {
+          "slug": "read_on",
+          "label": "When did you finish it?",
+          "type": "datetime"
+        },
+        {
+          "slug": "cover",
+          "label": "Book cover \u2014 upload a photo or image",
+          "type": "image",
+          "validation": {
+            "allowedMimeTypes": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ]
+          }
+        },
+        {
+          "slug": "summary",
+          "label": "What is the story about? Keep the ending a secret!",
+          "type": "text",
+          "options": {
+            "rows": 4
+          },
+          "validation": {
+            "maxLength": 2000
+          }
+        },
+        {
+          "slug": "favourite_character",
+          "label": "My favourite character is\u2026 because\u2026",
+          "type": "text",
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "favourite_part",
+          "label": "My favourite part was\u2026 because\u2026",
+          "type": "text",
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "feelings",
+          "label": "This book made me feel\u2026 because\u2026",
+          "type": "text",
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "change",
+          "label": "One thing I would change\u2026 (optional)",
+          "type": "text",
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "recommendation",
+          "label": "I would recommend this to\u2026 because\u2026",
+          "type": "text",
+          "options": {
+            "rows": 3
+          }
+        },
+        {
+          "slug": "rating",
+          "label": "My rating (1 to 5 stars)",
+          "type": "integer",
+          "validation": {
+            "min": 1,
+            "max": 5
+          }
+        },
+        {
+          "slug": "drawing",
+          "label": "My drawing \u2014 upload a photo of your artwork",
+          "type": "image",
+          "validation": {
+            "allowedMimeTypes": [
+              "image/jpeg",
+              "image/png",
+              "image/webp"
+            ]
+          }
+        },
+        {
+          "slug": "drawing_caption",
+          "label": "Tell us about your drawing",
+          "type": "text",
+          "options": {
+            "rows": 2
+          }
+        },
+        {
+          "slug": "contains_spoilers",
+          "label": "Does my review give away a surprise?",
+          "type": "boolean",
+          "defaultValue": false
+        },
+        {
+          "slug": "is_sample",
+          "label": "This is an example review",
+          "type": "boolean",
+          "defaultValue": false
+        }
+      ]
+    },
+    {
+      "slug": "homepage",
+      "label": "Homepage words",
+      "labelSingular": "Homepage",
+      "routable": false,
+      "titleField": "heading",
+      "supports": [
+        "drafts",
+        "revisions"
+      ],
+      "admin": {
+        "quickCreate": false
+      },
+      "fields": [
+        {
+          "slug": "heading",
+          "label": "Big heading",
+          "type": "string",
+          "required": true
+        },
+        {
+          "slug": "shelf_intro",
+          "label": "Bookshelf introduction",
+          "type": "text"
+        },
+        {
+          "slug": "footer",
+          "label": "Footer words",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "content": {
+    "reviews": [
+      {
+        "id": "sample-the-wild-robot",
+        "slug": "the-wild-robot",
+        "status": "published",
+        "data": {
+          "title": "The Wild Robot",
+          "author": "Peter Brown",
+          "genre": "Adventure",
+          "rating": 5,
+          "summary": "A robot called Roz wakes up on an island. She has to learn how to live with the animals and find a place to belong.",
+          "favourite_character": "Roz, because she keeps trying to understand the animals even when they are afraid of her.",
+          "favourite_part": "Watching Roz learn to care for a little gosling, because they become an unexpected family.",
+          "feelings": "Happy and a little sad, because Roz finds friends but life on the island is not always easy.",
+          "recommendation": "Someone who loves animals and adventures, because it is full of both.",
+          "age_range": "7\u201311",
+          "is_sample": true,
+          "cover": {
+            "$media": {
+              "url": "https://covers.openlibrary.org/b/isbn/9780316381994-L.jpg",
+              "filename": "the-wild-robot.jpg",
+              "alt": "Book cover: The Wild Robot"
+            }
+          }
+        }
+      },
+      {
+        "id": "sample-matilda",
+        "slug": "matilda",
+        "status": "published",
+        "data": {
+          "title": "Matilda",
+          "author": "Roald Dahl",
+          "genre": "Funny",
+          "rating": 5,
+          "summary": "Matilda loves books and has a very unusual family. At school she meets a kind teacher and a headteacher who is anything but kind.",
+          "favourite_character": "Matilda, because she is brave, clever, and stands up for other people.",
+          "favourite_part": "When Matilda visits the library, because it shows how a book can be a whole new world.",
+          "feelings": "Excited, because I wanted to see what Matilda would do next.",
+          "recommendation": "Readers who like funny stories and clever characters, because Matilda is full of surprises.",
+          "age_range": "7\u201311",
+          "is_sample": true,
+          "cover": {
+            "$media": {
+              "url": "https://covers.openlibrary.org/b/isbn/9780142410370-L.jpg",
+              "filename": "matilda.jpg",
+              "alt": "Book cover: Matilda"
+            }
+          }
+        }
+      },
+      {
+        "id": "sample-the-worst-witch",
+        "slug": "the-worst-witch",
+        "status": "published",
+        "data": {
+          "title": "The Worst Witch",
+          "author": "Jill Murphy",
+          "genre": "Fantasy",
+          "rating": 4,
+          "summary": "Mildred is learning to be a witch at a school of magic. Spells and broomsticks do not always go to plan!",
+          "favourite_character": "Mildred, because she makes mistakes but still tries her best.",
+          "favourite_part": "The lessons at the witch school, because I like imagining what learning magic would be like.",
+          "feelings": "Cheerful, because Mildred reminds me that nobody gets everything right the first time.",
+          "recommendation": "Anyone who wishes they could go to a school of magic, because there are plenty of funny mishaps.",
+          "age_range": "7\u201311",
+          "is_sample": true,
+          "cover": {
+            "$media": {
+              "url": "https://covers.openlibrary.org/b/isbn/9780141349596-L.jpg",
+              "filename": "the-worst-witch.jpg",
+              "alt": "Book cover: The Worst Witch"
+            }
+          }
+        }
+      }
+    ],
+    "homepage": [
+      {
+        "id": "home",
+        "status": "published",
+        "data": {
+          "heading": "Big adventures. Honest reviews.",
+          "shelf_intro": "Stories I\u2019ve read, in my own words.",
+          "footer": "Made of books, big ideas, and a little cat hair."
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+---
+import { getEmDashCollection } from 'emdash';
+import Base from '../layouts/Base.astro';
+import BookCard from '../components/BookCard.astro';
+import { canContribute } from '../lib/contributor-access';
+
+const rawPage = Astro.url.searchParams.get('page') ?? '1';
+const page = Number(rawPage);
+const perPage = 9;
+if (!/^\d+$/.test(rawPage) || !Number.isSafeInteger(page) || page < 1 || !Number.isSafeInteger(page * perPage)) {
+ Astro.response.status = 404;
+ return Astro.rewrite('/404');
+}
+const { entries: reviews, cacheHint, hasMore, error } = await getEmDashCollection('reviews', {
+ status: 'published',
+ orderBy: { published_at: 'desc' },
+ limit: perPage,
+ offset: (page - 1) * perPage,
+});
+if (error) return new Response('We couldn’t load the reviews. Please try again.', { status: 500 });
+if (page > 1 && !reviews.length) {
+ Astro.response.status = 404;
+ return Astro.rewrite('/404');
+}
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+const pageUrl = (number: number) => number === 1 ? '/bookshelf' : `/bookshelf?page=${number}`;
+---
+<Base title="My bookshelf" description="All book reviews, from the newest adventure to the oldest.">
+ <section class="wrap page-content">
+  <header class="page-top"><h1>My bookshelf</h1><p>All my book reviews, newest first.</p></header>
+  {reviews.length ? <div class="book-grid">{reviews.map(review => <BookCard review={review} />)}</div> : <div class="empty"><h2>No reviews yet</h2><p>Reviews will appear here once they’re published.</p>{canContribute(Astro.locals.user) && <a href="/write" class="button" style="margin-top:20px">Write a review</a>}</div>}
+  {(page > 1 || hasMore) && <nav class="pagination" aria-label="Bookshelf pages">
+   {page > 1 && <a href={pageUrl(page - 1)} class="button secondary" rel="prev">Previous page</a>}
+   <p aria-current="page">Page {page}</p>
+   {hasMore && <a href={pageUrl(page + 1)} class="button secondary" rel="next">Next page</a>}
+  </nav>}
+ </section>
+</Base>

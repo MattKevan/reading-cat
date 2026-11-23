@@ -1,0 +1,17 @@
+---
+import { getEmDashCollection, getSiteSettingsWithCacheHint } from 'emdash';
+import Base from '../layouts/Base.astro';
+import BookCard from '../components/BookCard.astro';
+import { canContribute } from '../lib/contributor-access';
+const { entries: reviews, cacheHint } = await getEmDashCollection('reviews', { status:'published', orderBy:{ published_at:'desc' }, limit:3 });
+const home = await getEmDashCollection('homepage', { limit:1 });
+const settings = await getSiteSettingsWithCacheHint();
+if(Astro.cache?.enabled){ Astro.cache.set(cacheHint); Astro.cache.set(home.cacheHint); Astro.cache.set(settings.cacheHint); }
+const words = home.entries[0];
+---
+<Base>
+ <section class="hero"><div class="hero-inner wrap"><div class="hero-copy"><h1 {...words?.edit.heading}>{words?.data.heading || 'Big adventures. Honest reviews.'}</h1><p>{settings.data.tagline}</p></div><img class="hero-art" src="/images/reading-cat.png" alt="A sleeping ginger cat curled up on colourful books, beside a cup of pencils" width="600" height="400" /></div></section>
+ <section id="bookshelf" class="bookshelf wrap"><h2>Latest reviews</h2><p class="section-intro" {...words?.edit.shelf_intro}>{words?.data.shelf_intro}</p>
+  {reviews.length ? <><div class="book-grid">{reviews.map(review => <BookCard review={review} />)}</div><a class="button secondary" href="/bookshelf" style="margin-top:30px">See all reviews</a></> : <div class="empty"><h3>No reviews yet</h3><p>Reviews will appear here once they’re published.</p>{canContribute(Astro.locals.user) && <a class="button" href="/write" style="margin-top:20px">Write a review</a>}</div>}
+ </section>
+</Base>

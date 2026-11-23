@@ -1,0 +1,22 @@
+---
+import { getEmDashEntry } from 'emdash';
+import { Image } from 'emdash/ui';
+import Base from '../../layouts/Base.astro';
+import Stars from '../../components/Stars.astro';
+import { canContribute } from '../../lib/contributor-access';
+const { entry: review, cacheHint } = await getEmDashEntry('reviews', Astro.params.slug!);
+if(!review){ Astro.response.status=404; return Astro.rewrite('/404'); }
+if(Astro.cache?.enabled) Astro.cache.set(cacheHint);
+const book = review.data;
+const sections = [['summary','What’s the story?'],['favourite_character','My favourite character'],['favourite_part','My favourite part'],['feelings','How it made me feel'],['change','One thing I would change'],['recommendation','Who would love this book?']] as const;
+---
+<Base title={book.title} description={book.summary} image={book.cover?.src} content={{ collection:'reviews', id:book.id, slug:review.id }}>
+ <article class="wrap page-content review-page" style="padding-top:35px"><a class="back-link" href="/bookshelf">Back to my bookshelf</a>
+  {book.is_sample && <p class="notice">This is an example review. Replace it with your own thoughts.</p>}
+  <header class="review-header">{book.cover && <div class="review-cover"><Image image={book.cover} /></div>}<div><Stars rating={book.rating} /><h1 {...review.edit.title}>{book.title}</h1><p {...review.edit.author}>by {book.author}</p>{book.illustrator && <p class="author">Illustrated by {book.illustrator}</p>}<div class="review-details">{book.genre && <span>{book.genre}</span>}{book.age_range && <span>· For {book.age_range}</span>}{book.read_on && <span>· Finished {new Date(book.read_on).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span>}</div></div></header>
+  {book.contains_spoilers && <p class="notice">This review gives away some surprises in the story.</p>}
+  <div class="review-prose">{sections.map(([field,heading]) => book[field] && <section><h2>{heading}</h2><p {...review.edit[field]}>{book[field]}</p></section>)}</div>
+  {book.drawing && <figure class="artwork"><h2>My story in a drawing</h2><div {...review.edit.drawing}><Image image={book.drawing} /></div>{book.drawing_caption && <figcaption {...review.edit.drawing_caption}>{book.drawing_caption}</figcaption>}</figure>}
+  <div class="review-actions">{canContribute(Astro.locals.user) && <a class="button secondary" href={`/write?id=${encodeURIComponent(book.id)}`}>Edit this review</a>}<a href="/bookshelf">All reviews</a></div>
+ </article>
+</Base>

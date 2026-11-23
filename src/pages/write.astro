@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { hasPermission } from '@emdash-cms/auth';
+import { contributorAccess } from '../lib/contributor-access';
+const denied = contributorAccess(Astro.locals.user, Astro.url);
+if (denied) return denied;
+const canPublish = hasPermission(Astro.locals.user, 'content:publish_own');
+Astro.response.headers.set('Cache-Control','private, no-store');
+---
+<Base title="Write a review">
+ <div class="wrap editor-wrap page-content">
+  <header class="page-top"><h1>Write a review</h1><p>Add your thoughts and a drawing. Save a draft and finish later.</p></header>
+  <form id="review-form" data-can-write="true" data-can-publish={canPublish ? 'true' : 'false'} novalidate>
+   <nav class="steps" aria-label="Review steps">{['The book','My thoughts','My drawing'].map((name,index)=><button type="button" class="step-button" data-step={index} aria-current={index===0?'step':undefined}><span>{index+1}</span>{name}</button>)}</nav>
+   <div class="editor-paper">
+    <section class="step-panel" data-panel="0"><h2 tabindex="-1">The book</h2><p class="help">Start with the title. You can add the rest later.</p>
+     <div class="form-grid">
+      <div class="field"><label for="title">Book title</label><input id="title" name="title" placeholder="e.g. Matilda" maxlength="200" required /></div>
+      <div class="field"><label for="author">Who wrote it?</label><input id="author" name="author" placeholder="The author’s name" maxlength="200" /></div>
+      <div class="field"><label for="illustrator">Who drew the pictures? <small>(optional)</small></label><input id="illustrator" name="illustrator" placeholder="The illustrator’s name" maxlength="200" /></div>
+      <div class="field"><label for="genre">What kind of book is it?</label><select id="genre" name="genre"><option value="">Choose a kind</option>{['Adventure','Fantasy','Funny','Mystery','Real life','Animals','Non-fiction','Poetry','Other'].map(genre=><option>{genre}</option>)}</select></div>
+      <div class="field"><label for="age_range">Who is it for? <small>(optional)</small></label><input id="age_range" name="age_range" placeholder="e.g. readers aged 7–11" maxlength="100" /></div>
+      <div class="field"><label for="read_on">When did you finish it? <small>(optional)</small></label><input id="read_on" name="read_on" type="date" /></div>
+     </div>
+     <div class="field upload"><label for="cover-file">Add the book cover</label><small>Choose a photo or image. JPG, PNG or WebP, up to 10 MB.</small><input type="file" id="cover-file" accept="image/jpeg,image/png,image/webp" /><img id="cover-preview" alt="Your chosen book cover" hidden /><button class="button secondary small remove-image" type="button" data-remove="cover" hidden>Remove cover</button></div>
+    </section>
+    <section class="step-panel" data-panel="1" hidden><h2 tabindex="-1">What did you think?</h2><p class="help">Explain your ideas with a reason or an example from the book.</p>
+     <div class="field"><label for="summary">What is the story about?</label><small>Summarise the story without giving away the ending.</small><textarea id="summary" name="summary" maxlength="2000" rows="4" placeholder="The story is about…"></textarea></div>
+     <div class="field"><label for="favourite_character">Who is your favourite character?</label><textarea id="favourite_character" name="favourite_character" maxlength="3000" rows="3" placeholder="My favourite character is… because…"></textarea></div>
+     <div class="field"><label for="favourite_part">What was your favourite part?</label><textarea id="favourite_part" name="favourite_part" maxlength="3000" rows="3" placeholder="My favourite part was… because…"></textarea></div>
+     <div class="field"><label for="feelings">How did the book make you feel?</label><textarea id="feelings" name="feelings" maxlength="3000" rows="3" placeholder="I felt… because…"></textarea></div>
+     <div class="field"><label for="change">What would you change? <small>(optional)</small></label><textarea id="change" name="change" maxlength="3000" rows="3" placeholder="I would change… because…"></textarea></div>
+     <div class="field"><label for="recommendation">Who would you recommend it to?</label><textarea id="recommendation" name="recommendation" maxlength="3000" rows="3" placeholder="I would recommend this to… because…"></textarea></div>
+     <fieldset class="field"><legend>How many stars would you give it?</legend><div class="rating-options">{[1,2,3,4,5].map(rating=><label class="rating-option"><input name="rating" type="radio" value={rating} />{rating} <span aria-hidden="true">★</span><span class="sr-only">{rating===1?'star':'stars'}</span></label>)}</div><small>It’s fine if you didn’t enjoy the book. Your opinion matters.</small></fieldset>
+     <label class="check-label"><input type="checkbox" name="contains_spoilers" /><span>My review gives away a surprise in the story.<br /><small class="help">We’ll add a warning for readers.</small></span></label>
+    </section>
+    <section class="step-panel" data-panel="2" hidden><h2 tabindex="-1">My drawing</h2><p class="help">Draw a character, a favourite moment, or how the story made you feel. Add a photo or scan of your drawing.</p>
+     <div class="field upload"><label for="drawing-file">Add your drawing <small>(optional)</small></label><small>Choose a photo or scan. JPG, PNG or WebP, up to 10 MB.</small><input type="file" id="drawing-file" accept="image/jpeg,image/png,image/webp" /><img id="drawing-preview" alt="Your chosen drawing" hidden /><button class="button secondary small remove-image" type="button" data-remove="drawing" hidden>Remove drawing</button></div>
+     <div class="field"><label for="drawing_caption">Tell us about your drawing</label><textarea name="drawing_caption" id="drawing_caption" rows="2" maxlength="1000" placeholder="I drew… because…"></textarea></div>
+     <label class="check-label" id="sample-control" hidden><input type="checkbox" name="is_sample" /><span>Keep the “example review” label.</span></label>
+     <section class="review-preview"><h3>Review preview</h3><div id="review-preview"></div><p class="help">{canPublish ? '“Add to my bookshelf” publishes your review for everyone to read.' : 'Save your draft for an editor to review and publish.'}</p></section>
+    </section>
+    <div class="editor-actions"><button id="back" type="button" class="button secondary" hidden>Back</button><button id="save" type="button" class="button secondary">Save draft</button><button id="next" type="button" class="button">Next</button><button id="publish" type="button" class="button" hidden>Add to my bookshelf</button></div>
+    <p class="status-message" id="editor-status" role="status" aria-live="polite"></p>
+   </div>
+  </form>
+ </div>
+</Base>
+<script>import '../scripts/review-editor';</script>
+<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>

@@ -1,0 +1,40 @@
+{
+  "name": "reading-cat",
+  "version": "0.0.3",
+  "private": true,
+  "type": "module",
+  "emdash": {
+    "label": "Reading Cat",
+    "seed": "seed/seed.json"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
+    "typecheck": "astro check && tsc -p tsconfig.worker.json",
+    "build:cloudflare": "CLOUDFLARE_ENV=preview astro build --config astro.cloudflare.config.mjs",
+    "deploy:preview": "npm run build:cloudflare && wrangler deploy",
+    "types:cloudflare": "wrangler types --env production",
+    "test": "node --test tests/contributor-access.test.mjs",
+    "build:production": "CLOUDFLARE_ENV=production astro build --config astro.cloudflare.config.mjs",
+    "deploy:production": "npm run build:production && wrangler deploy"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.3.3",
+    "@astrojs/node": "^11.1.5",
+    "@astrojs/react": "^6.0.5",
+    "@emdash-cms/cloudflare": "^1.0.1",
+    "astro": "^7.3.2",
+    "emdash": "^1.0.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "wrangler": "^4.166.0"
+  },
+  "engines": {
+    "node": ">=24.15.0"
+  }
+}

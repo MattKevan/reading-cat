@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import { contributorAccess } from '../lib/contributor-access';
+const denied = contributorAccess(Astro.locals.user, Astro.url);
+if (denied) return denied;
+Astro.response.headers.set('Cache-Control','private, no-store');
+---
+<Base title="My drafts"><section class="wrap page-content editor-wrap"><header class="page-top"><h1>My drafts</h1><p>Pick up where you left off.</p></header>
+ <div id="draft-list" class="draft-list"><p role="status">Loading your drafts…</p></div>
+ <a class="button" href="/write" style="margin-top:28px">Write a new review</a>
+</section></Base>
+<script>
+import { api } from '../scripts/emdash-api';
+const container=document.querySelector<HTMLDivElement>('#draft-list');
+if(container){
+ try{
+  const data=await api('/content/reviews?status=all&limit=100');
+  const drafts=(data.items||[]).filter(item=>item.status==='draft'||item.draftRevisionId);
+  container.replaceChildren();
+  if(!drafts.length){const p=document.createElement('p');p.textContent='No drafts yet. Save a review here while you’re working on it.';container.append(p);}
+  for(const item of drafts){
+   const article=document.createElement('article');article.className='draft-item';
+   const text=document.createElement('div');const title=document.createElement('h2');title.textContent=String(item.data.title);
+   const date=document.createElement('p');date.textContent=(item.status==='published'?'Unshared changes · Saved ':'Saved ')+new Date(item.updatedAt).toLocaleDateString('en-GB');text.append(title,date);
+   const link=document.createElement('a');link.className='button secondary';link.href='/write?id='+encodeURIComponent(item.id);link.textContent='Keep writing';article.append(text,link);container.append(article);
+  }
+ }catch{container.textContent='We couldn’t load your drafts. Refresh the page to try again.';}
+}
+</script>

@@ -1,0 +1,80 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "reading-cat",
+	"main": "./src/worker.ts",
+	"account_id": "809be5c582d8b86c06b06f6d452a6e50",
+	"compatibility_date": "2026-09-29",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"workers_dev": true,
+	"preview_urls": false,
+	"triggers": {
+		"crons": [
+			"*/5 * * * *"
+		]
+	},
+	"observability": {
+		"logs": {
+		"enabled": true,
+		"invocation_logs": true,
+		"persist": true
+    	}
+  	},
+	"env": {
+		"preview": {
+			"name": "reading-cat-preview-20260929",
+			"vars": {
+				"EMDASH_SITE_URL": "https://reading.cat"
+			},
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "reading-cat-preview-20260929",
+					"database_id": "ebb2cc49-1692-4365-95ee-6d36bee68bdf"
+				}
+			],
+			"r2_buckets": [
+				{
+					"bucket_name": "reading-cat-preview-20260929-media",
+					"binding": "MEDIA"
+				}
+			],
+			"triggers": {
+				"crons": []
+			}
+		},
+		"production": {
+			"name": "reading-cat",
+			"workers_dev": false,
+			"routes": [
+				{
+					"pattern": "reading.cat",
+					"custom_domain": true
+				}
+			],
+			"vars": {
+				"EMDASH_SITE_URL": "https://reading.cat"
+			},
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "reading-cat-preview-20260929",
+					"database_id": "ebb2cc49-1692-4365-95ee-6d36bee68bdf"
+				}
+			],
+			"r2_buckets": [
+				{
+					"bucket_name": "reading-cat-preview-20260929-media",
+					"binding": "MEDIA"
+				}
+			],
+			"kv_namespaces": [
+				{
+					"binding": "SESSION",
+					"id": "befc9ebf826e4693865ea6c1d760dbd5"
+				}
+			]
+		}
+	}
+}
